@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS {schema}.{table} (
 @task
 def extract():
     http = HttpHook(http_conn_id='rest_country_api_conn', method='GET')
-    endpoint = Variable.get('rest_counry_api_')
+    endpoint = Variable.get('rest_country_api_endpoint')
 
     response = http.run(endpoint, timeout=30)
     logging.info("api works well")
@@ -82,4 +82,7 @@ with DAG(
     schedule = '30 6 * * 6'
 ) as dag:
 
-    load(transform(extract()))
+    schema = Variable.get("my_prac_schema")
+    table = Variable.get("rest_country_table")
+    records = transform(extract())
+    load(schema, table, records)
