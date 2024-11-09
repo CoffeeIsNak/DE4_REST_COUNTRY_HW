@@ -19,7 +19,7 @@ def _refresh_table(cur, schema, table):
     cur.execute(f"DROP TABLE IF EXISTS {schema}.{table};")
     cur.execute(f"""
 CREATE TABLE IF NOT EXISTS {schema}.{table} (
-    country varchar(50),
+    country varchar(100),
     population bigint,
     area bigint
 );""")
@@ -31,7 +31,7 @@ def extract():
     http = HttpHook(http_conn_id='rest_country_api_conn', method='GET')
     endpoint = Variable.get('rest_country_api_endpoint')
 
-    response = http.run(endpoint, timeout=30)
+    response = http.run(endpoint, extra_options={"timeout": 30})
     logging.info("api works well")
     data = response.json()
     logging.info("extract done")
